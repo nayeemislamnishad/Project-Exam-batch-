@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Exam Builder — Generate GitHub-Ready Exam Papers</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --bg: #f3f4f6;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #d1d5db;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+            --transition: 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(160deg, #f9fafb 0%, #e5e7eb 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--surface);
+            padding: 28px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #e5e7eb;
+            transition: box-shadow var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-header .icon {
+            font-size: 28px;
+        }
+        .card-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+        .card-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 2px 0 0 0;
+        }
+
+        /* --- Form Elements --- */
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.01em;
+            color: #374151;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            background: #fafbfc;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            color: var(--text);
+        }
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            background: #fff;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all var(--transition);
+            letter-spacing: 0.01em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+            font-size: 17px;
+            margin-top: 8px;
+        }
+        .btn-success:hover {
+            background: var(--success-hover);
+            transform: translateY(-1px);
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            width: auto;
+            padding: 8px 14px;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin-top: 6px;
+        }
+        .btn-outline:hover {
+            background: #eef2ff;
+        }
+        .btn-copy {
+            background: #3b82f6;
+            color: #fff;
+            margin-top: 10px;
+        }
+        .btn-copy:hover {
+            background: #2563eb;
+        }
+        .btn-download {
+            background: #6b7280;
+            color: #fff;
+            margin-top: 8px;
+        }
+        .btn-download:hover {
+            background: #4b5563;
+        }
+
+        /* --- Question List --- */
+        .question-item {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            padding: 16px 18px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            transition: background var(--transition);
+        }
+        .question-item:hover {
+            background: #f3f4f6;
+        }
+        .question-content {
+            word-break: break-word;
+            flex: 1;
+        }
+        .question-content strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: #111827;
+        }
+        .question-content .correct-badge {
+            display: inline-block;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        .empty-state .icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* --- Output --- */
+        textarea {
+            width: 100%;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Menlo', monospace;
+            font-size: 12px;
+            background: #1e1e2e;
+            color: #cdd6f4;
+            resize: vertical;
+            min-height: 200px;
+            line-height: 1.5;
+            tab-size: 2;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            gap: 4px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Builder Card -->
+        <div class="card" id="builder-card">
+            <div class="card-header">
+                <span class="icon">🛠️</span>
+                <div>
+                    <h2>Exam Builder</h2>
+                    <p>Add questions, then generate a standalone exam paper for GitHub</p>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>📝 Question</label>
+                    <input type="text" id="q" placeholder="e.g. What is the capital of France?">
+                </div>
+                <div class="options-grid">
+                    <input type="text" id="a1" placeholder="🔘 Option A">
+                    <input type="text" id="a2" placeholder="🔘 Option B">
+                    <input type="text" id="a3" placeholder="🔘 Option C">
+                    <input type="text" id="a4" placeholder="🔘 Option D">
+                </div>
+                <div class="form-group">
+                    <label>✅ Correct Answer</label>
+                    <select id="correct">
+                        <option value="">-- Select the correct option --</option>
+                        <option value="0">Option A</option>
+                        <option value="1">Option B</option>
+                        <option value="2">Option C</option>
+                        <option value="3">Option D</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="addQuestion()">
+                <span>➕</span> Add This Question
+            </button>
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:8px;text-align:center;">
+                You can add as many questions as you want. All questions are preserved.
+            </p>
+        </div>
+
+        <!-- Question List Card -->
+        <div class="card" id="question-list-card" style="display: none;">
+            <div class="flex-between">
+                <h3 style="margin:0;font-size:18px;">📋 Added Questions</h3>
+                <span class="stat-badge" id="question-count-badge">0 questions</span>
+            </div>
+            <div id="question-list"></div>
+            <button class="btn btn-success" onclick="generateExamHTML()">
+                🚀 Generate Final Exam Paper (HTML)
+            </button>
+        </div>
+
+        <!-- Output Card -->
+        <div class="card" id="output-card" style="display: none;">
+            <div class="card-header">
+                <span class="icon">💻</span>
+                <div>
+                    <h2>Generated HTML Code</h2>
+                    <p>Copy this code and paste it into a <code>.html</code> file on GitHub — it works as a fully interactive exam.</p>
+                </div>
+            </div>
+            <textarea id="code-output" readonly spellcheck="false"></textarea>
+            <button class="btn btn-copy" onclick="copyToClipboard()">📋 Copy Code to Clipboard</button>
+            <button class="btn btn-download" onclick="downloadHTML()">💾 Download as .html File</button>
+            <button class="btn btn-outline" onclick="previewInNewTab()">🔗 Open Preview in New Tab</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- STATE ----------
+            let questions = [];
+
+            // ---------- DOM REFS ----------
+            const qInput = document.getElementById('q');
+            const a1Input = document.getElementById('a1');
+            const a2Input = document.getElementById('a2');
+            const a3Input = document.getElementById('a3');
+            const a4Input = document.getElementById('a4');
+            const correctSelect = document.getElementById('correct');
+            const questionListDiv = document.getElementById('question-list');
+            const questionListCard = document.getElementById('question-list-card');
+            const outputCard = document.getElementById('output-card');
+            const codeOutput = document.getElementById('code-output');
+            const questionCountBadge = document.getElementById('question-count-badge');
+
+            // ---------- FUNCTIONS ----------
+
+            function clearInputs() {
+                qInput.value = '';
+                a1Input.value = '';
+                a2Input.value = '';
+                a3Input.value = '';
+                a4Input.value = '';
+                correctSelect.value = '';
+            }
+
+            function renderQuestionList() {
+                questionListDiv.innerHTML = '';
+
+                if (questions.length === 0) {
+                    questionListCard.style.display = 'none';
+                    outputCard.style.display = 'none';
+                    questionCountBadge.textContent = '0 questions';
+                    return;
+                }
+
+                questionListCard.style.display = 'block';
+                questionCountBadge.textContent = questions.length + ' question' + (questions.length > 1 ? 's' :
+                '');
+
+                questions.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'question-item';
+                    div.innerHTML = `
+                        <div class="question-content">
+                            <strong>${index + 1}. ${escapeHTML(item.q)}</strong>
+                            <span style="font-size:13px;color:#4b5563;">
+                                A: ${escapeHTML(item.options[0])} | B: ${escapeHTML(item.options[1])} | C: ${escapeHTML(item.options[2])} | D: ${escapeHTML(item.options[3])}
+                            </span>
+                            <span class="correct-badge">✔ Correct: ${escapeHTML(item.answer)}</span>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteQuestion(${index})" title="Delete this question">
+                            🗑️
+                        </button>
+                    `;
+                    questionListDiv.appendChild(div);
+                });
+            }
+
+            function escapeHTML(str) {
+                const div = document.createElement('div');
+                div.appendChild(document.createTextNode(str));
+                return div.innerHTML;
+            }
+
+            // ---------- ADD QUESTION ----------
+            window.addQuestion = function() {
+                const q = qInput.value.trim();
+                const a1 = a1Input.value.trim();
+                const a2 = a2Input.value.trim();
+                const a3 = a3Input.value.trim();
+                const a4 = a4Input.value.trim();
+                const correctIndex = correctSelect.value;
+
+                if (!q || !a1 || !a2 || !a3 || !a4 || correctIndex === '') {
+                    alert('⚠️ Please fill in the question, all 4 options, and select the correct answer.');
+                    return;
+                }
+
+                const options = [a1, a2, a3, a4];
+                const answer = options[parseInt(correctIndex, 10)];
+
+                // Check for duplicate question text (optional, friendly warning)
+                const duplicate = questions.some(item => item.q.toLowerCase() === q.toLowerCase());
+                if (duplicate) {
+                    const proceed = confirm(
+                        '⚠️ A question with this exact text already exists. Do you still want to add it?');
+                    if (!proceed) return;
+                }
+
+                questions.push({
+                    q: q,
+                    options: options,
+                    answer: answer
+                });
+
+                clearInputs();
+                renderQuestionList();
+                // Hide output if questions change after generation
+                outputCard.style.display = 'none';
+                // Scroll to the list
+                questionListCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Focus back on question input
+                qInput.focus();
+            };
+
+            // ---------- DELETE QUESTION ----------
+            window.deleteQuestion = function(index) {
+                if (confirm('Are you sure you want to delete question #' + (index + 1) + '?')) {
+                    questions.splice(index, 1);
+                    renderQuestionList();
+                    // Hide output if all questions deleted or modified
+                    outputCard.style.display = 'none';
+                    if (questions.length === 0) {
+                        questionListCard.style.display = 'none';
+                    }
+                }
+            };
+
+            // ---------- GENERATE EXAM HTML ----------
+            window.generateExamHTML = function() {
+                if (questions.length === 0) {
+                    alert('⚠️ Please add at least one question before generating the exam paper.');
+                    return;
+                }
+
+                // Build the complete standalone exam HTML
+                const generatedHTML = buildExamHTML(questions);
+
+                codeOutput.value = generatedHTML;
+                outputCard.style.display = 'block';
+                outputCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
+            function buildExamHTML(questionsData) {
+                // We use a robust approach: build the JSON manually to avoid escaping headaches
+                const questionsJSON = JSON.stringify(questionsData, null, 2)
+                    .replace(/</g, '\\u003c') // Escape < in JSON for inline script safety
+                    .replace(/>/g, '\\u003e')
+                    .replace(/&/g, '\\u0026');
+
+                return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>📝 Final Examination</title>
+        <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+                font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+                background: linear-gradient(145deg, #f0f4f8 0%, #d9e2ec 100%);
+                color: #1a202c;
+                min-height: 100vh;
+                padding: 30px 16px;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            .exam-wrapper {
+                max-width: 780px;
+                width: 100%;
+                background: #ffffff;
+                border-radius: 18px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 6px 12px rgba(0,0,0,0.06);
+                padding: 36px 32px;
+                animation: fadeSlideIn 0.4s ease-out;
+            }
+            @keyframes fadeSlideIn {
+                from { opacity: 0; transform: translateY(24px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .exam-header {
+                text-align: center;
+                margin-bottom: 32px;
+                padding-bottom: 20px;
+                border-bottom: 3px solid #e2e8f0;
+            }
+            .exam-header h1 {
+                font-size: 30px;
+                font-weight: 700;
+                color: #1e293b;
+                letter-spacing: -0.02em;
+            }
+            .exam-header .subtitle {
+                color: #64748b;
+                font-size: 14px;
+                margin-top: 4px;
+            }
+            .question-block {
+                background: #f8fafc;
+                border: 2px solid #e2e8f0;
+                border-radius: 14px;
+                padding: 22px 20px;
+                margin-bottom: 22px;
+                transition: border-color 0.2s, background 0.2s;
+            }
+            .question-block:hover {
+                border-color: #cbd5e1;
+                background: #f1f5f9;
+            }
+            .question-text {
+                font-size: 17px;
+                font-weight: 600;
+                margin-bottom: 14px;
+                color: #0f172a;
+                line-height: 1.5;
+            }
+            .option-label {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 13px 16px;
+                margin-bottom: 8px;
+                background: #fff;
+                border: 2px solid #e2e8f0;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: all 0.18s ease;
+                font-size: 15px;
+                color: #334155;
+                user-select: none;
+            }
+            .option-label:hover {
+                border-color: #818cf8;
+                background: #eef2ff;
+                transform: translateX(3px);
+            }
+            .option-label input[type="radio"] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 20px;
+                height: 20px;
+                border: 2px solid #cbd5e1;
+                border-radius: 50%;
+                flex-shrink: 0;
+                transition: all 0.15s;
+                position: relative;
+                cursor: pointer;
+            }
+            .option-label input[type="radio"]:checked {
+                border-color: #4f46e5;
+                background: #4f46e5;
+                box-shadow: inset 0 0 0 4px #fff;
+            }
+            .option-label:has(input:checked) {
+                border-color: #4f46e5;
+                background: #e0e7ff;
+                font-weight: 600;
+                color: #1e1b4b;
+            }
+            /* Reveal styles (applied after submit) */
+            .option-label.correct-reveal {
+                border-color: #10b981 !important;
+                background: #d1fae5 !important;
+                color: #065f46 !important;
+                font-weight: 600;
+            }
+            .option-label.wrong-reveal {
+                border-color: #ef4444 !important;
+                background: #fee2e2 !important;
+                color: #991b1b !important;
+            }
+            .option-label input:disabled {
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+            .submit-btn {
+                display: block;
+                width: 100%;
+                padding: 16px;
+                background: #4f46e5;
+                color: #fff;
+                border: none;
+                border-radius: 12px;
+                font-size: 18px;
+                font-weight: 700;
+                cursor: pointer;
+                letter-spacing: 0.02em;
+                transition: background 0.2s, transform 0.1s;
+                margin-top: 10px;
+            }
+            .submit-btn:hover { background: #4338ca; transform: translateY(-1px); }
+            .submit-btn:active { transform: scale(0.98); }
+            .submit-btn:disabled {
+                background: #9ca3af;
+                cursor: not-allowed;
+                transform: none;
+            }
+            .result-panel {
+                text-align: center;
+                margin-top: 26px;
+                padding: 22px;
+                border-radius: 14px;
+                font-size: 20px;
+                font-weight: 700;
+                display: none;
+                animation: fadeSlideIn 0.35s ease-out;
+            }
+            .result-panel.show { display: block; }
+            .result-excellent { background: #d1fae5; color: #065f46; }
+            .result-good { background: #fef3c7; color: #92400e; }
+            .result-needs-work { background: #fee2e2; color: #991b1b; }
+            .reset-btn {
+                display: block;
+                width: 100%;
+                padding: 13px;
+                background: #fff;
+                color: #4f46e5;
+                border: 2px solid #4f46e5;
+                border-radius: 10px;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-top: 12px;
+                transition: all 0.2s;
+            }
+            .reset-btn:hover { background: #eef2ff; }
+            @media (max-width: 500px) {
+                .exam-wrapper { padding: 20px 14px; }
+                .question-block { padding: 16px 12px; }
+                .option-label { font-size: 14px; padding: 11px 12px; }
+            }
+        </style>
+        </head>
+        <body>
+        <div class="exam-wrapper">
+            <div class="exam-header">
+                <h1>📝 Final Examination</h1>
+                <p class="subtitle">Answer all questions and click <strong>Submit</strong> to see your score</p>
+            </div>
+            <div id="quiz-container"></div>
+            <button class="submit-btn" id="submit-btn" onclick="submitExam()">📨 Submit Answers</button>
+            <div id="result-panel" class="result-panel"></div>
+            <button class="reset-btn" id="reset-btn" style="display:none;" onclick="resetExam()">🔄 Retake Exam</button>
+        </div>
+
+        <script>
+        (function() {
+            // ── Exam Data ──
+            var questions = ${questionsJSON};
+
+            // ── Build Quiz ──
+            function buildQuiz() {
+                var container = document.getElementById('quiz-container');
+                container.innerHTML = '';
+                questions.forEach(function(q, i) {
+                    var block = document.createElement('div');
+                    block.className = 'question-block';
+                    block.id = 'qb-' + i;
+                    var heading = '<div class="question-text">' + (i + 1) + '. ' + escapeText(q.q) + '</div>';
+                    var optionsHTML = '';
+                    q.options.forEach(function(opt, optIdx) {
+                        var uid = 'q' + i + '_opt' + optIdx;
+                        optionsHTML +=
+                            '<label class="option-label" id="label_' + uid + '">' +
+                            '<input type="radio" name="q' + i + '" value="' + escapeAttr(opt) +
+                            '" onchange="highlightChoice(' + i + ',\\'' + uid + '\\')">' +
+                            '<span>' + escapeText(opt) + '</span>' +
+                            '</label>';
+                    });
+                    block.innerHTML = heading + optionsHTML;
+                    container.appendChild(block);
+                });
+            }
+
+            function escapeText(str) {
+                var div = document.createElement('div');
+                div.appendChild(document.createTextNode(str));
+                return div.innerHTML;
+            }
+
+            function escapeAttr(str) {
+                return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g,
+                    '&lt;').replace(/>/g, '&gt;');
+            }
+
+            // ── Highlight Selection ──
+            window.highlightChoice = function(qIndex, uid) {
+                var labels = document.querySelectorAll('#qb-' + qIndex + ' .option-label');
+                labels.forEach(function(lbl) { lbl.style.background = '#fff';
+                    lbl.style.fontWeight = '400';
+                    lbl.style.borderColor = '#e2e8f0'; });
+                var selectedLabel = document.getElementById('label_' + uid);
+                if (selectedLabel) {
+                    selectedLabel.style.borderColor = '#4f46e5';
+                    selectedLabel.style.background = '#e0e7ff';
+                    selectedLabel.style.fontWeight = '600';
+                }
+            };
+
+            // ── Submit Exam ──
+            window.submitExam = function() {
+                var allAnswered = true;
+                questions.forEach(function(q, i) {
+                    var checked = document.querySelector('input[name="q' + i + '"]:checked');
+                    if (!checked) allAnswered = false;
+                });
+                if (!allAnswered) {
+                    alert('⚠️ Please answer all questions before submitting.');
+                    return;
+                }
+
+                var score = 0;
+                questions.forEach(function(q, i) {
+                    var selectedInput = document.querySelector('input[name="q' + i + '"]:checked');
+                    var labels = document.querySelectorAll('#qb-' + i + ' .option-label');
+                    labels.forEach(function(lbl) {
+                        var input = lbl.querySelector('input');
+                        input.disabled = true;
+                        lbl.style.cursor = 'default';
+                        // Remove highlight
+                        lbl.style.background = '#fff';
+                        lbl.style.fontWeight = '400';
+                        lbl.style.borderColor = '#e2e8f0';
+                        // Mark correct
+                        if (input.value === q.answer) {
+                            lbl.classList.add('correct-reveal');
+                        }
+                        // Mark wrong if this was selected and it's not correct
+                        if (selectedInput && input === selectedInput && input.value !== q
+                            .answer) {
+                            lbl.classList.add('wrong-reveal');
+                        }
+                    });
+                    if (selectedInput && selectedInput.value === q.answer) {
+                        score++;
+                    }
+                });
+
+                var total = questions.length;
+                var percentage = (score / total) * 100;
+                var panel = document.getElementById('result-panel');
+                panel.classList.add('show');
+                panel.classList.remove('result-excellent', 'result-good', 'result-needs-work');
+
+                var message = '';
+                if (percentage >= 80) {
+                    panel.classList.add('result-excellent');
+                    message = '🎉 Excellent! You scored <strong>' + score + ' / ' + total +
+                        '</strong> (' + Math.round(percentage) + '%)';
+                } else if (percentage >= 50) {
+                    panel.classList.add('result-good');
+                    message = '👍 Good effort! You scored <strong>' + score + ' / ' + total +
+                        '</strong> (' + Math.round(percentage) + '%)';
+                } else {
+                    panel.classList.add('result-needs-work');
+                    message = '📚 Keep studying! You scored <strong>' + score + ' / ' + total +
+                        '</strong> (' + Math.round(percentage) + '%)';
+                }
+                panel.innerHTML = message;
+
+                document.getElementById('submit-btn').disabled = true;
+                document.getElementById('submit-btn').textContent = '✅ Exam Submitted';
+                document.getElementById('reset-btn').style.display = 'block';
+            };
+
+            // ── Reset Exam ──
+            window.resetExam = function() {
+                document.getElementById('submit-btn').disabled = false;
+                document.getElementById('submit-btn').textContent = '📨 Submit Answers';
+                document.getElementById('reset-btn').style.display = 'none';
+                var panel = document.getElementById('result-panel');
+                panel.classList.remove('show', 'result-excellent', 'result-good', 'result-needs-work');
+                panel.innerHTML = '';
+                buildQuiz();
+            };
+
+            // ── Initialize ──
+            buildQuiz();
+        })();
+        <\/script>
+        </body>
+        </html>`;
+            }
+
+            // ---------- COPY TO CLIPBOARD ----------
+            window.copyToClipboard = function() {
+                const text = codeOutput.value;
+                if (!text) {
+                    alert('No code to copy. Please generate the exam first.');
+                    return;
+                }
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('✅ Code copied to clipboard! You can now paste it into a GitHub .html file.');
+                }).catch(() => {
+                    codeOutput.select();
+                    codeOutput.setSelectionRange(0, 99999);
+                    alert('⚠️ Automatic copy failed. The code is selected — please press Ctrl+C (Cmd+C) to copy manually.');
+                });
+            };
+
+            // ---------- DOWNLOAD HTML ----------
+            window.downloadHTML = function() {
+                const text = codeOutput.value;
+                if (!text) {
+                    alert('No code to download. Please generate the exam first.');
+                    return;
+                }
+                const blob = new Blob([text], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Final_Exam.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // ---------- PREVIEW IN NEW TAB ----------
+            window.previewInNewTab = function() {
+                const text = codeOutput.value;
+                if (!text) {
+                    alert('No code to preview. Please generate the exam first.');
+                    return;
+                }
+                const blob = new Blob([text], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const newWindow = window.open(url, '_blank');
+                if (!newWindow) {
+                    alert('⚠️ Pop-up blocked! Please allow pop-ups for this site or use the Download button instead.');
+                }
+                // Clean up after a delay
+                setTimeout(() => URL.revokeObjectURL(url), 3000);
+            };
+
+            // ---------- KEYBOARD SHORTCUT (Enter in last option adds question) ----------
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    window.addQuestion();
+                }
+            });
+
+            // ---------- INITIAL RENDER ----------
+            renderQuestionList();
+
+            console.log('✅ Pro Exam Builder ready!');
+            console.log('💡 Tip: Press Ctrl+Enter to quickly add a question.');
+        })();
+    </script>
+</body>
+</html>
